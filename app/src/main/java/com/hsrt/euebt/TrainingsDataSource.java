@@ -13,6 +13,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * This class offers an interface for the app's database.
+ */
 public class TrainingsDataSource {
 
     private SQLiteDatabase database;
@@ -31,6 +34,11 @@ public class TrainingsDataSource {
         dbHelper.close();
     }
 
+    /**
+     * Adds a new training unit (just done by the user) to the database.
+     * @param name The name of the training unit that shall be stored in the database.
+     * @return The resulting training unit that was generated and stored in the database.
+     */
     public Training addTraining(String name) {
         Training result = new Training(name);
         ContentValues values = new ContentValues();
@@ -40,11 +48,19 @@ public class TrainingsDataSource {
         return result;
     }
 
+    /**
+     * Deletes a specific training unit from the database.
+     * @param training The training unit that shall be deleted from the database.
+     */
     public void deleteTraining(Training training) {
         long timestamp = training.getTimestamp();
         database.delete(MySQLiteHelper.TABLE_TRAININGS, MySQLiteHelper.COLUMN_TIMESTAMP + " = " + timestamp, null);
     }
 
+    /**
+     * Returns all names of training units stored in the database.
+     * @return A list of all names of training units stored in the database. Each name is contained once.
+     */
     public List<String> getAllNames() {
         List<String> names = new ArrayList<String>();
         Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAININGS, new String[] { allColumns[0] }, null, new String[] { "distinct" }, MySQLiteHelper.COLUMN_NAME, null, null);
@@ -57,6 +73,11 @@ public class TrainingsDataSource {
         return names;
     }
 
+    /**
+     * Retrieves a list of all training units belonging to a specific training unit pool.
+     * @param name The name of the training units that should be retrieved.
+     * @return All training units from the database that have the given name.
+     */
     public List<Training> getAllTrainingsWithName(String name) {
         List<Training> trainings = new ArrayList<Training>();
         Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAININGS, allColumns, MySQLiteHelper.COLUMN_TIMESTAMP + " = '" + name + "'", null, null, null, null);
@@ -71,6 +92,9 @@ public class TrainingsDataSource {
     }
 
     private Training cursorToTraining(Cursor cursor) {
+        if (cursor == null) {
+            return null;
+        }
         return new Training(cursor.getString(0), cursor.getLong(1));
     }
 }

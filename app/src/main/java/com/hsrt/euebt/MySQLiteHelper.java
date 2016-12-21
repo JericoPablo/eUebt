@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * A helper class for managing the database's structure.
+ */
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_TRAININGS = "trainings";
@@ -17,7 +20,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "euebt.db";
     private static final int DATABASE_VERSION = 1;
-
     private static final String DATABASE_CREATE = "create table " + TABLE_TRAININGS + "( " + COLUMN_NAME + " text not null, " + COLUMN_TIMESTAMP + " integer primary key autoincrement );";
 
     public MySQLiteHelper(Context context) {
@@ -31,8 +33,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(MySQLiteHelper.class.getName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRAININGS);
+        Log.w(MySQLiteHelper.class.getName(), "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data.");
+        db.execSQL("drop table if exists " + TABLE_TRAININGS);
         onCreate(db);
     }
 }
