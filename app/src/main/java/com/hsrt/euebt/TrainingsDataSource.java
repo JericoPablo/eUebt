@@ -13,13 +13,13 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-public class CommentsDataSource {
+public class TrainingsDataSource {
 
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
     private String[] allColumns = { MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_TIMESTAMP };
 
-    public CommentsDataSource(Context context) {
+    public TrainingsDataSource(Context context) {
         dbHelper = new MySQLiteHelper(context);
     }
 
@@ -31,7 +31,7 @@ public class CommentsDataSource {
         dbHelper.close();
     }
 
-    public Training addUebung(String name) {
+    public Training addTraining(String name) {
         Training result = new Training(name);
         ContentValues values = new ContentValues();
         values.put(MySQLiteHelper.COLUMN_NAME, result.getName());
@@ -40,7 +40,7 @@ public class CommentsDataSource {
         return result;
     }
 
-    public void deleteUebung(Training training) {
+    public void deleteTraining(Training training) {
         long timestamp = training.getTimestamp();
         database.delete(MySQLiteHelper.TABLE_TRAININGS, MySQLiteHelper.COLUMN_TIMESTAMP + " = " + timestamp, null);
     }

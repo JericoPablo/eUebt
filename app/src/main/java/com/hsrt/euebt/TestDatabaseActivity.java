@@ -9,22 +9,21 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 
 public class TestDatabaseActivity extends ListActivity {
-    private CommentsDataSource datasource;
+    private TrainingsDataSource datasource;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        datasource = new CommentsDataSource(this);
+        datasource = new TrainingsDataSource(this);
         datasource.open();
 
-        List<Comment> values = datasource.getAllComments();
+        List<String> values = datasource.getAllNames();
 
         // use the SimpleCursorAdapter to show the
         // elements in a ListView
-        ArrayAdapter<Comment> adapter = new ArrayAdapter<Comment>(this,
-                android.R.layout.simple_list_item_1, values);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
     }
 
@@ -32,21 +31,21 @@ public class TestDatabaseActivity extends ListActivity {
     // of the buttons in main.xml
     public void onClick(View view) {
         @SuppressWarnings("unchecked")
-        ArrayAdapter<Comment> adapter = (ArrayAdapter<Comment>) getListAdapter();
-        Comment comment = null;
+        ArrayAdapter<Training> adapter = (ArrayAdapter<Training>) getListAdapter();
+        Training Training = null;
         switch (view.getId()) {
             case R.id.add:
-                String[] comments = new String[] { "Cool", "Very nice", "Hate it" };
+                String[] Trainings = new String[] { "Cool", "Very nice", "Hate it" };
                 int nextInt = new Random().nextInt(3);
-                // save the new comment to the database
-                comment = datasource.createComment(comments[nextInt]);
-                adapter.add(comment);
+                // save the new Training to the database
+                Training = datasource.addTraining(Trainings[nextInt]);
+                adapter.add(Training);
                 break;
             case R.id.delete:
                 if (getListAdapter().getCount() > 0) {
-                    comment = (Comment) getListAdapter().getItem(0);
-                    datasource.deleteComment(comment);
-                    adapter.remove(comment);
+                    Training = (Training) getListAdapter().getItem(0);
+                    datasource.deleteTraining(Training);
+                    adapter.remove(Training);
                 }
                 break;
         }
