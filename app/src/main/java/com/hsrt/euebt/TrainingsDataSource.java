@@ -63,7 +63,7 @@ public class TrainingsDataSource {
      */
     public List<String> getAllNames() {
         List<String> names = new ArrayList<String>();
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAININGS, new String[] { allColumns[0] }, null, new String[] { "distinct" }, MySQLiteHelper.COLUMN_NAME, null, null);
+        Cursor cursor = database.query(true, MySQLiteHelper.TABLE_TRAININGS, new String[] { allColumns[0] }, null, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             names.add(cursor.getString(0));
@@ -80,7 +80,7 @@ public class TrainingsDataSource {
      */
     public List<Training> getAllTrainingsWithName(String name) {
         List<Training> trainings = new ArrayList<Training>();
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAININGS, allColumns, MySQLiteHelper.COLUMN_TIMESTAMP + " = '" + name + "'", null, null, null, null);
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAININGS, allColumns, MySQLiteHelper.COLUMN_NAME + " = '" + name + "'", null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Training training = cursorToTraining(cursor);
