@@ -40,28 +40,28 @@ public class TestDatabaseActivity extends ListActivity {
 
     // Will be called via the onClick attribute
     // of the buttons in main.xml
-   // public void onClick(View view) {
-     //   @SuppressWarnings("unchecked")
-       // ArrayAdapter<Training> adapter = (ArrayAdapter<Training>) getListAdapter();
-        //Training Training = null;
-        //switch (view.getId()) {
-         //   case R.id.add:
-           //     String[] Trainings = new String[] { "Cool", "Very nice", "Hate it" };
-             //   int nextInt = new Random().nextInt(3);
-                // save the new Training to the database
-               // Training = datasource.addTraining(Trainings[nextInt]);
-                //adapter.add(Training);
-                //break;
-            //case R.id.delete:
-              //  if (getListAdapter().getCount() > 0) {
-                //    Training = (Training) getListAdapter().getItem(0);
-                  //  datasource.deleteTraining(Training);
-                    //adapter.remove(Training);
-                //}
-                //break;
-        //}
-        //adapter.notifyDataSetChanged();
-    //}
+    public void onClick(View view) {
+      @SuppressWarnings("unchecked")
+        ArrayAdapter<Training> adapter = (ArrayAdapter<Training>) getListAdapter();
+        Training Training = null;
+        switch (view.getId()) {
+            case R.id.add:
+                String[] Trainings = new String[] { "Cool", "Very nice", "Hate it" };
+                int nextInt = new Random().nextInt(3);
+                 //save the new Training to the database
+                Training = datasource.addTraining(Trainings[nextInt]);
+                adapter.add(Training);
+                break;
+            case R.id.delete:
+                if (getListAdapter().getCount() > 0) {
+                    Training = (Training) getListAdapter().getItem(0);
+                    datasource.deleteTraining(Training);
+                    adapter.remove(Training);
+                }
+                break;
+        }
+        adapter.notifyDataSetChanged();
+    }
 
     public void addItems(View v) {
         //Init adapter
