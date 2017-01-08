@@ -11,6 +11,7 @@ public class Training {
 
     private String name;
     private long timestamp;
+    private int id;
 
     /**
      * Instantiates a training unit with the current system time as timestamp and the name provided.
@@ -29,6 +30,7 @@ public class Training {
     public Training(String name, long timestamp) {
         this.name = name;
         this.timestamp = timestamp;
+
     }
 
     public long getTimestamp() {
@@ -38,6 +40,8 @@ public class Training {
     public String getName() {
         return name;
     }
+
+    public int getId() { return id; }
 
     @Override
     public String toString() {
