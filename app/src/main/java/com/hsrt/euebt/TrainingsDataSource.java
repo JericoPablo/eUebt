@@ -20,7 +20,7 @@ public class TrainingsDataSource {
 
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
-    private String[] allColumns = { MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_TIMESTAMP };
+    private String[] allColumns = { MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_TIMESTAMP, MySQLiteHelper.COLUMN_LOCATION };
 
     public TrainingsDataSource(Context context) {
         dbHelper = new MySQLiteHelper(context);
@@ -39,11 +39,12 @@ public class TrainingsDataSource {
      * @param name The name of the training unit that shall be stored in the database.
      * @return The resulting training unit that was generated and stored in the database.
      */
-    public Training addTraining(String name) {
-        Training result = new Training(name);
+    public Training addTraining(String name, String location) {
+        Training result = new Training(name, location);
         ContentValues values = new ContentValues();
         values.put(MySQLiteHelper.COLUMN_NAME, result.getName());
         values.put(MySQLiteHelper.COLUMN_TIMESTAMP, result.getTimestamp());
+        values.put(MySQLiteHelper.COLUMN_LOCATION, result.getLocation());
         database.insert(MySQLiteHelper.TABLE_TRAININGS, null, values);
         return result;
     }
@@ -95,6 +96,6 @@ public class TrainingsDataSource {
         if (cursor == null) {
             return null;
         }
-        return new Training(cursor.getString(0), cursor.getLong(1));
+        return new Training(cursor.getString(0), cursor.getLong(1), cursor.getString(2));
     }
 }

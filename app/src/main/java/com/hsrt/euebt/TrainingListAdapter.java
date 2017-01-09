@@ -44,11 +44,9 @@ public class TrainingListAdapter extends BaseAdapter {
         TextView tvBeschreibung = (TextView)v.findViewById(R.id.tv_beschreibung);
         //Set text for TextView
         tvName.setText(mUebungList.get(position).getName());
-
-        //Save product id to tag
-        v.setTag(mUebungList.get(position).getId());
+        // Changed by Johannes: Using name as tag, since trainings don't have an ID...
+        v.setTag(mUebungList.get(position).getName());
 
         return v;
     }
-
 }

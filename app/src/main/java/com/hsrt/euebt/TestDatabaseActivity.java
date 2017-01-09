@@ -6,13 +6,16 @@ import java.util.Random;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+
 public class TestDatabaseActivity extends ListActivity {
+
     private TrainingsDataSource datasource;
     private ListView lvProduct;
     private List<Training> mUebungList = new ArrayList<>();
@@ -46,10 +49,14 @@ public class TestDatabaseActivity extends ListActivity {
         Training Training = null;
         switch (view.getId()) {
             case R.id.add:
-                String[] Trainings = new String[] { "Cool", "Very nice", "Hate it" };
+                String[] Trainings = new String[] { "Piano", "English", "Sport" };
                 int nextInt = new Random().nextInt(3);
                  //save the new Training to the database
-                Training = datasource.addTraining(Trainings[nextInt]);
+                String currentGPSLocation = "";
+                try {
+                    currentGPSLocation = ((LocationManager)getSystemService(Context.LOCATION_SERVICE)).getLastKnownLocation(LocationManager.GPS_PROVIDER).toString();
+                } catch (SecurityException e) { }
+                Training = datasource.addTraining(Trainings[nextInt], currentGPSLocation);
                 adapter.add(Training);
                 break;
             case R.id.delete:
