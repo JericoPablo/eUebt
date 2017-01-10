@@ -50,12 +50,14 @@ public class TrainingManager extends AppCompatActivity {
 
     public void addItems(View v) {
         //Init adapter
+        /*
         lvProduct.setAdapter(adapter);
         EditText nameUebungET= (EditText)findViewById(R.id.nameEditText);
         EditText beschreibungUebungET = (EditText)findViewById(R.id.beschreibungEditText);
         mUebungList.add(new Training(nameUebungET.getText()+""));
         clearTextField(nameUebungET);
         clearTextField(beschreibungUebungET);
+        */
     }
 
     public void clearTextField(EditText toClear){

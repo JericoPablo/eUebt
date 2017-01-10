@@ -6,26 +6,35 @@ import java.util.Random;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
 
-public class TrainingListActivity extends ListActivity {
+public class TrainingListActivity extends AppCompatActivity {
+
+    public static final int REQUEST_CODE = 12;
 
     private TrainingsDataSource datasource;
     private ListView lvProduct;
     private List<Training> mUebungList = new ArrayList<>();
     private TrainingListAdapter adapter;
 
+    private Toolbar toolbar;
+    private EditText trainingNameEditText;
+    private EditText trainingDescriptionEditText;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uebungen);
-
+        initToolbar();
         lvProduct = (ListView)findViewById(R.id.listview_product);
 
         adapter = new TrainingListAdapter(getApplicationContext(), mUebungList);
@@ -41,9 +50,22 @@ public class TrainingListActivity extends ListActivity {
         //setListAdapter(adapter);
     }
 
+    private void initToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_close_black_24dp);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
     // Will be called via the onClick attribute
     // of the buttons in main.xml
-    public void onClick(View view) {
+  /*  public void onClick(View view) {
       @SuppressWarnings("unchecked")
         ArrayAdapter<Training> adapter = (ArrayAdapter<Training>) getListAdapter();
         Training Training = null;
@@ -69,17 +91,23 @@ public class TrainingListActivity extends ListActivity {
         }
         adapter.notifyDataSetChanged();
     }
-
+*/
+    /*
     public void addItems(View v) {
         //Init adapter
         lvProduct.setAdapter(adapter);
-        EditText nameUebungET= (EditText)findViewById(R.id.nameEditText);
+        //EditText nameUebungET= (EditText)findViewById(R.id.nameEditText);
         mUebungList.add(new Training(nameUebungET.getText()+""));
         clearTextField(nameUebungET);
-    }
+    }*/
 
     public void clearTextField(EditText toClear){
         toClear.setText("");
+    }
+
+    public void addTraining(View view) {
+        Intent addTrainingIntent = new Intent(this, addNewTrainingActivity.class);
+        startActivityForResult(addTrainingIntent, REQUEST_CODE);
     }
 
     @Override
@@ -93,4 +121,12 @@ public class TrainingListActivity extends ListActivity {
         datasource.close();
         super.onPause();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && requestCode == RESULT_OK) {
+
+        }
+    }
+
 }
