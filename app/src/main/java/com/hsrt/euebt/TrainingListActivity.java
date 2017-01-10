@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 
-public class TestDatabaseActivity extends ListActivity {
+public class TrainingListActivity extends ListActivity {
 
     private TrainingsDataSource datasource;
     private ListView lvProduct;

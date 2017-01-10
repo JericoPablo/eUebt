@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Training Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/trainingNameTextView" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/trainingNameEditText" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="Description"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/trainingDescriptionTextView" />
+
+        <EditText
+            android:layout_width="285dp"
+            android:layout_height="95dp"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/trainingDescriptionEditText" />
+    </LinearLayout>
+
+    <Button
+        android:text="add Training"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addTrainingButton" />
+
+</LinearLayout>
