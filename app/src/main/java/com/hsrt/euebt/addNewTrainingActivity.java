@@ -39,10 +39,10 @@ public class addNewTrainingActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_training);
-
         image = (ImageView) findViewById(R.id.image);
         trainingNameEditText = (EditText) findViewById(R.id.trainingNameEditText);
         trainingDescriptionEditText = (EditText) findViewById(R.id.trainingDescriptionEditText);
+
 
         initToolbar();
     }
@@ -61,15 +61,14 @@ public class addNewTrainingActivity extends AppCompatActivity {
     }
 
     public void addItems(View v) {
-        EditText trainingNameEditText = (EditText)findViewById(R.id.trainingNameEditText);
-        EditText trainingDescriptionEditText = (EditText)findViewById(R.id.trainingDescriptionEditText);
-        trainingList.add(new Training(trainingNameEditText.getText()+"",trainingDescriptionEditText.getText()+""));
+
+        /*trainingList.add(new Training(trainingNameEditText.getText()+"",trainingDescriptionEditText.getText()+""));
         clearTextField(trainingNameEditText);
         clearTextField(trainingDescriptionEditText);
         Intent nextIntent = new Intent(this, TrainingListActivity.class);
         nextIntent.putExtra("trainingList", trainingList);
         this.startActivity(nextIntent);
-
+        */
     }
     public void clearTextField(EditText toClear){
         toClear.setText("");
