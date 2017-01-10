@@ -20,7 +20,8 @@ public class TrainingsDataSource {
 
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
-    private String[] allColumns = { MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_TIMESTAMP, MySQLiteHelper.COLUMN_LOCATION };
+    private String[] trainingColumns = { MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_TIMESTAMP, MySQLiteHelper.COLUMN_LOCATION };
+    private String[] extraDataColumns = { MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_EXTRA_TYPE, MySQLiteHelper.COLUMN_EXTRA_CONTENT};
 
     public TrainingsDataSource(Context context) {
         dbHelper = new MySQLiteHelper(context);
@@ -37,6 +38,7 @@ public class TrainingsDataSource {
     /**
      * Adds a new training unit (just done by the user) to the database.
      * @param name The name of the training unit that shall be stored in the database.
+     * @param location The location where the training unit was done.
      * @return The resulting training unit that was generated and stored in the database.
      */
     public Training addTraining(String name, String location) {
@@ -46,6 +48,23 @@ public class TrainingsDataSource {
         values.put(MySQLiteHelper.COLUMN_TIMESTAMP, result.getTimestamp());
         values.put(MySQLiteHelper.COLUMN_LOCATION, result.getLocation());
         database.insert(MySQLiteHelper.TABLE_TRAININGS, null, values);
+        return result;
+    }
+
+    /**
+     * Adds a new training extra data unit to the database.
+     * @param trainingName The name of the training unit this extra data unit belongs to.
+     * @param type The type this extra data unit is of.
+     * @param content The content (corresponding the type) of this extra data unit.
+     * @return The resulting extra data unit that was generated and stored in the database.
+     */
+    public TrainingExtra addTrainingExtra(String trainingName, TrainingExtra.ExtraType type, String content) {
+        TrainingExtra result = new TrainingExtra(trainingName, type, content);
+        ContentValues values = new ContentValues();
+        values.put(MySQLiteHelper.COLUMN_EXTRA_NAME, result.getTrainingName());
+        values.put(MySQLiteHelper.COLUMN_EXTRA_TYPE, result.getType().toString());
+        values.put(MySQLiteHelper.COLUMN_EXTRA_CONTENT, result.getContent());
+        database.insert(MySQLiteHelper.TABLE_TRAINING_EXTRAS, null, values);
         return result;
     }
 
@@ -63,8 +82,8 @@ public class TrainingsDataSource {
      * @return A list of all names of training units stored in the database. Each name is contained once.
      */
     public List<String> getAllNames() {
-        List<String> names = new ArrayList<String>();
-        Cursor cursor = database.query(true, MySQLiteHelper.TABLE_TRAININGS, new String[] { allColumns[0] }, null, null, null, null, null, null);
+        List<String> names = new ArrayList<>();
+        Cursor cursor = database.query(true, MySQLiteHelper.TABLE_TRAININGS, new String[] { trainingColumns[0] }, null, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             names.add(cursor.getString(0));
@@ -80,8 +99,8 @@ public class TrainingsDataSource {
      * @return All training units from the database that have the given name.
      */
     public List<Training> getAllTrainingsWithName(String name) {
-        List<Training> trainings = new ArrayList<Training>();
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAININGS, allColumns, MySQLiteHelper.COLUMN_NAME + " = '" + name + "'", null, null, null, null);
+        List<Training> trainings = new ArrayList<>();
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAININGS, trainingColumns, MySQLiteHelper.COLUMN_NAME + " = '" + name + "'", null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Training training = cursorToTraining(cursor);
@@ -92,10 +111,35 @@ public class TrainingsDataSource {
         return trainings;
     }
 
+    /**
+     * Retrieves a list of all training extra data units belonging to a specific training.
+     * @param trainingName The name of the training you want to get the extra data from.
+     * @return A list of all extra data units that belong to the given training.
+     */
+    public List<TrainingExtra> getAllExtraDataForTraining(String trainingName) {
+        List<TrainingExtra> extras = new ArrayList<>();
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAINING_EXTRAS, extraDataColumns, MySQLiteHelper.COLUMN_EXTRA_NAME + " = '" + trainingName + "'", null, null, null, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            TrainingExtra extra = cursorToTrainingExtra(cursor);
+            extras.add(extra);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return extras;
+    }
+
     private Training cursorToTraining(Cursor cursor) {
         if (cursor == null) {
             return null;
         }
         return new Training(cursor.getString(0), cursor.getLong(1), cursor.getString(2));
+    }
+
+    private TrainingExtra cursorToTrainingExtra(Cursor cursor) {
+        if (cursor == null) {
+            return null;
+        }
+        return new TrainingExtra(cursor.getString(0), TrainingExtra.ExtraType.valueOf(cursor.getString(1)), cursor.getString(2));
     }
 }

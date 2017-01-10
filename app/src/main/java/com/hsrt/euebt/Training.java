@@ -5,7 +5,7 @@ package com.hsrt.euebt;
  */
 
 /**
- * A class for representing one training unit that was done by the user at a specific place and point in time.
+ * A class for representing one training unit that was done by the user at a specific place and point in time at a specific location.
  */
 public class Training {
 
