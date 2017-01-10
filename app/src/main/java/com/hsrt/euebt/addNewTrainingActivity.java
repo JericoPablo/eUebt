@@ -42,7 +42,7 @@ public class addNewTrainingActivity extends AppCompatActivity {
         image = (ImageView) findViewById(R.id.image);
         trainingNameEditText = (EditText) findViewById(R.id.trainingNameEditText);
         trainingDescriptionEditText = (EditText) findViewById(R.id.trainingDescriptionEditText);
-
+        //eventuell auslagern
 
         initToolbar();
     }
