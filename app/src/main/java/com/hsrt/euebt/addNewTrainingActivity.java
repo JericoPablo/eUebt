@@ -105,10 +105,13 @@ public class addNewTrainingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionSave) {
-            String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
+            if(photo!=null) {
+                String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
+                datasource.addTraining(trainingNameEditText.getText().toString(), "Longitude: -122.0840 Latitude: 37.4220");
+            }
             result = RESULT_OK;
-            datasource.addTraining(trainingNameEditText.getText().toString(),"Longitude: -122.0840 Latitude: 37.4220");
             finish();
+
         }
         return true;
     }

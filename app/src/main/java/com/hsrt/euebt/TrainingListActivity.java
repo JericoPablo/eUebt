@@ -6,6 +6,8 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ public class TrainingListActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private EditText trainingNameEditText;
     private EditText trainingDescriptionEditText;
+    private RecyclerView recyclerView;
 
 
     @Override
@@ -31,7 +34,7 @@ public class TrainingListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uebungen);
         initToolbar();
-        lvProduct = (ListView)findViewById(R.id.listview_product);
+        //lvProduct = (ListView)findViewById(R.id.listview_product);
 
         adapter = new TrainingListAdapter(getApplicationContext(), mUebungList);
 
@@ -44,20 +47,35 @@ public class TrainingListActivity extends AppCompatActivity {
         // elements in a ListView
        // ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
         //setListAdapter(adapter);
+
+        setupRecyclerView();
     }
 
     //die Toolbar wird initialisiert
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_close_black_24dp);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+    }
+
+    private void setupRecyclerView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_product);
+
+        TrainingAdapter wdAdapter = new TrainingAdapter(this, mUebungList, new OnObjectClickListener() {
+            @Override
+            public void onObjectClick(Training training) {
+               // DO stuff here when u click item in the list
+                System.out.println("Item Clicked");
+            }
+        });
+
+        recyclerView.setAdapter(wdAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     // Will be called via the onClick attribute
@@ -125,6 +143,7 @@ public class TrainingListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && requestCode == RESULT_OK) {
             // hier alle Daten auslesen und die Liste überschreiben datasource.getAllNames();
+
         }
     }
 

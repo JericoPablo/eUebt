@@ -22,6 +22,17 @@
 
         </android.support.design.widget.AppBarLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView><!--
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -33,7 +44,7 @@
             android:divider="#d1d1d1"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
         </ListView>
-
+        -->
 
         <android.support.design.widget.FloatingActionButton
             android:src="@drawable/ic_add"
@@ -46,8 +57,11 @@
             android:layout_margin="16dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            app:layout_anchor="@+id/listview_product"
-            app:layout_anchorGravity="bottom|right"
             android:layout_gravity="top|left" />
+
+    </RelativeLayout>
+
+
+
 
 </android.support.design.widget.CoordinatorLayout>
