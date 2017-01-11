@@ -120,7 +120,7 @@ public class TrainingListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && requestCode == RESULT_OK) {
-
+            // hier alle Daten auslesen und die Liste überschreiben datasource.getAllNames();
         }
     }
 

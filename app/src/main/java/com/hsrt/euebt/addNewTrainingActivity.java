@@ -31,7 +31,7 @@ public class addNewTrainingActivity extends AppCompatActivity {
 
     private EditText trainingNameEditText;
     private EditText trainingDescriptionEditText;
-
+    private TrainingsDataSource datasource;
     private Bitmap photo;
     private ArrayList<Training> trainingList = new ArrayList<>();
 
@@ -45,6 +45,9 @@ public class addNewTrainingActivity extends AppCompatActivity {
         //eventuell auslagern
 
         initToolbar();
+
+        datasource = new TrainingsDataSource(this);
+        datasource.open();
     }
 
     private void initToolbar() {
@@ -98,9 +101,9 @@ public class addNewTrainingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionSave) {
-            String imagePath = ImageController.instance.saveImageToStorage(photo, this);
+            String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
             result = RESULT_OK;
-            // datenbank schreiben
+            datasource.addTraining(trainingNameEditText.getText().toString(),"Longitude: -122.0840 Latitude: 37.4220");
             finish();
         }
         return true;
