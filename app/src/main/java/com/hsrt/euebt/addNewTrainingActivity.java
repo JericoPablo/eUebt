@@ -77,11 +77,13 @@ public class addNewTrainingActivity extends AppCompatActivity {
         toClear.setText("");
     }
 
+    //Inten für die Camera wird ausgeführt
     public void takePicture(View view) {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
+    //sobald die Camera Activity fertig ist wird wieder die Activity aufgerufen und das Bild erstellt.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
@@ -91,6 +93,7 @@ public class addNewTrainingActivity extends AppCompatActivity {
 
     }
 
+    //wenn oben links auf abbrechen geklickt wird springt es wieeder in die vorherige Activity zurück
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -98,6 +101,7 @@ public class addNewTrainingActivity extends AppCompatActivity {
         return true;
     }
 
+    //wenn oben rechts auf akzeptieren geklickt wird wird das Bild in die Storage gespeichert und der Pfad ausgelesen und in die DB geschrieben
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionSave) {

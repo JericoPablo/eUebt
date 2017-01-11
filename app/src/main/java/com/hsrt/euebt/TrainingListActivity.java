@@ -25,6 +25,7 @@ public class TrainingListActivity extends AppCompatActivity {
     private EditText trainingNameEditText;
     private EditText trainingDescriptionEditText;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +46,7 @@ public class TrainingListActivity extends AppCompatActivity {
         //setListAdapter(adapter);
     }
 
+    //die Toolbar wird initialisiert
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_close_black_24dp);
@@ -100,6 +102,7 @@ public class TrainingListActivity extends AppCompatActivity {
         toClear.setText("");
     }
 
+    //Wenn ein neues Training hinzugefügt werden soll, wird eine neue Activity aufgerufen mittels einem Intent
     public void addTraining(View view) {
         Intent addTrainingIntent = new Intent(this, addNewTrainingActivity.class);
         startActivityForResult(addTrainingIntent, REQUEST_CODE);
@@ -117,6 +120,7 @@ public class TrainingListActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    //Springt in die Methode wenn von er von dieser Activity in eine andere springt und wieder zurück kommt.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && requestCode == RESULT_OK) {
