@@ -4,10 +4,12 @@ package com.hsrt.euebt;
  * Created by Johannes on 11.12.2016.
  */
 
+import java.io.Serializable;
+
 /**
  * A class for representing one training unit that was done by the user at a specific place and point in time at a specific location.
  */
-public class Training {
+public class Training implements Serializable {
 
     private String name;
     private String location;

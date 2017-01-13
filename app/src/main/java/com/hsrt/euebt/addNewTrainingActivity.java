@@ -39,10 +39,13 @@ public class addNewTrainingActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_training);
+        //Bundle bunde getIntent().getB
+        Intent i = getIntent();
+        trainingList = (ArrayList<Training>)i.getSerializableExtra("trainingList");
         image = (ImageView) findViewById(R.id.image);
         trainingNameEditText = (EditText) findViewById(R.id.trainingNameEditText);
         trainingDescriptionEditText = (EditText) findViewById(R.id.trainingDescriptionEditText);
-        //eventuell auslagern
+     
 
         initToolbar();
 
@@ -108,6 +111,13 @@ public class addNewTrainingActivity extends AppCompatActivity {
             if(photo!=null) {
                 String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
                 datasource.addTraining(trainingNameEditText.getText().toString(), "Longitude: -122.0840 Latitude: 37.4220");
+                trainingList.add(new Training(trainingNameEditText.getText().toString(),"Longitude: -122.0840 Latitude: 37.4220"));
+                if(imagePath!=null && imagePath.length()>=0){
+                    datasource.addTrainingExtra(trainingNameEditText.getText().toString(),TrainingExtra.ExtraType.Image,imagePath);
+                }
+                if(trainingDescriptionEditText.getText()!=null && trainingDescriptionEditText.getText().length()>=0){
+                    datasource.addTrainingExtra(trainingNameEditText.getText().toString(),TrainingExtra.ExtraType.Description,trainingDescriptionEditText.getText().toString());
+                }
             }
             result = RESULT_OK;
             finish();

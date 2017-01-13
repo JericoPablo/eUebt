@@ -1,5 +1,6 @@
 package com.hsrt.euebt;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class TrainingListActivity extends AppCompatActivity {
 
     private TrainingsDataSource datasource;
     private ListView lvProduct;
-    private List<Training> mUebungList = new ArrayList<>();
+    private ArrayList<Training> trainingList = new ArrayList<>();
     private TrainingListAdapter adapter;
 
     private Toolbar toolbar;
@@ -36,7 +37,7 @@ public class TrainingListActivity extends AppCompatActivity {
         initToolbar();
         //lvProduct = (ListView)findViewById(R.id.listview_product);
 
-        adapter = new TrainingListAdapter(getApplicationContext(), mUebungList);
+        adapter = new TrainingListAdapter(getApplicationContext(), trainingList);
 
         datasource = new TrainingsDataSource(this);
         datasource.open();
@@ -66,7 +67,7 @@ public class TrainingListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview_product);
 
-        TrainingAdapter wdAdapter = new TrainingAdapter(this, mUebungList, new OnObjectClickListener() {
+        TrainingAdapter wdAdapter = new TrainingAdapter(this, trainingList, new OnObjectClickListener() {
             @Override
             public void onObjectClick(Training training) {
                // DO stuff here when u click item in the list
@@ -123,6 +124,7 @@ public class TrainingListActivity extends AppCompatActivity {
     //Wenn ein neues Training hinzugefügt werden soll, wird eine neue Activity aufgerufen mittels einem Intent
     public void addTraining(View view) {
         Intent addTrainingIntent = new Intent(this, addNewTrainingActivity.class);
+        addTrainingIntent.putExtra("trainingList",trainingList);
         startActivityForResult(addTrainingIntent, REQUEST_CODE);
     }
 
@@ -143,6 +145,7 @@ public class TrainingListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && requestCode == RESULT_OK) {
             // hier alle Daten auslesen und die Liste überschreiben datasource.getAllNames();
+            adapter.notifyDataSetChanged();
 
         }
     }
