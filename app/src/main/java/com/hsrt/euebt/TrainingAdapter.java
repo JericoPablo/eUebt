@@ -17,11 +17,13 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
     private final List<Training> trainings;
     private final Context context;
     private final OnObjectClickListener listener;
+    private final TrainingExtra trainingDescriptionExtra;
 
-    public TrainingAdapter(Context context, List<Training> workoutExercises, OnObjectClickListener listener) {
-        this.trainings = workoutExercises;
+    public TrainingAdapter(Context context, List<Training> trainingList, TrainingExtra trainingDescriptionExtra, OnObjectClickListener listener) {
+        this.trainings = trainingList;
         this.context = context;
         this.listener = listener;
+        this.trainingDescriptionExtra = trainingDescriptionExtra;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
         Training workoutExercise = trainings.get(position);
 
         viewHolder.trainingNameTextView.setText(workoutExercise.getName());
-        //viewHolder.trainingDescriptionTextView.setText(workoutExercise.getDescription());
+        viewHolder.trainingDescriptionTextView.setText(trainingDescriptionExtra.getContent());
 
         viewHolder.bind(workoutExercise, listener);
     }
@@ -60,10 +62,10 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
             trainingDescriptionTextView = (TextView) itemView.findViewById(R.id.training_description);
         }
 
-        public void bind(final Training exercise, final OnObjectClickListener listener) {
+        public void bind(final Training training, final OnObjectClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    listener.onObjectClick(exercise);
+                    listener.onObjectClick(training);
                 }
             });
         }

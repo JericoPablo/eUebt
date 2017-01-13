@@ -4,10 +4,12 @@ package com.hsrt.euebt;
  * Created by Johannes on 10.01.2017.
  */
 
+import java.io.Serializable;
+
 /**
  * A class for representing one extra data unit of a certain type with a certain content for a specific training.
  */
-public class TrainingExtra {
+public class TrainingExtra implements Serializable {
 
     private String trainingName;
     private ExtraType type;

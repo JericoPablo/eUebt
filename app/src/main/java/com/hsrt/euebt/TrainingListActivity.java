@@ -18,11 +18,11 @@ import android.widget.ListView;
 public class TrainingListActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE = 12;
-
+    private TrainingAdapter wdAdapter;
     private TrainingsDataSource datasource;
     private ListView lvProduct;
     private ArrayList<Training> trainingList = new ArrayList<>();
-    private TrainingListAdapter adapter;
+    private TrainingExtra trainingDescriptionExtra;
 
     private Toolbar toolbar;
     private EditText trainingNameEditText;
@@ -37,7 +37,6 @@ public class TrainingListActivity extends AppCompatActivity {
         initToolbar();
         //lvProduct = (ListView)findViewById(R.id.listview_product);
 
-        adapter = new TrainingListAdapter(getApplicationContext(), trainingList);
 
         datasource = new TrainingsDataSource(this);
         datasource.open();
@@ -67,7 +66,7 @@ public class TrainingListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview_product);
 
-        TrainingAdapter wdAdapter = new TrainingAdapter(this, trainingList, new OnObjectClickListener() {
+        wdAdapter = new TrainingAdapter(this, trainingList, trainingDescriptionExtra, new OnObjectClickListener() {
             @Override
             public void onObjectClick(Training training) {
                // DO stuff here when u click item in the list
@@ -124,7 +123,6 @@ public class TrainingListActivity extends AppCompatActivity {
     //Wenn ein neues Training hinzugefügt werden soll, wird eine neue Activity aufgerufen mittels einem Intent
     public void addTraining(View view) {
         Intent addTrainingIntent = new Intent(this, addNewTrainingActivity.class);
-        addTrainingIntent.putExtra("trainingList",trainingList);
         startActivityForResult(addTrainingIntent, REQUEST_CODE);
     }
 
@@ -143,9 +141,13 @@ public class TrainingListActivity extends AppCompatActivity {
     //Springt in die Methode wenn von er von dieser Activity in eine andere springt und wieder zurück kommt.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE && requestCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             // hier alle Daten auslesen und die Liste überschreiben datasource.getAllNames();
-            adapter.notifyDataSetChanged();
+            Training addNewTraining = (Training) data.getSerializableExtra("newTraining");
+            trainingDescriptionExtra = (TrainingExtra) data.getSerializableExtra("newTrainingExtra");
+            trainingList.add(addNewTraining);
+            wdAdapter.notifyDataSetChanged();
+            System.out.println("GEHT REIN"+trainingList+"");
 
         }
     }

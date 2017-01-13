@@ -33,19 +33,17 @@ public class addNewTrainingActivity extends AppCompatActivity {
     private EditText trainingDescriptionEditText;
     private TrainingsDataSource datasource;
     private Bitmap photo;
-    private ArrayList<Training> trainingList = new ArrayList<>();
+    private Training newTraining;
+    private TrainingExtra descriptionExtra;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_training);
-        //Bundle bunde getIntent().getB
-        Intent i = getIntent();
-        trainingList = (ArrayList<Training>)i.getSerializableExtra("trainingList");
         image = (ImageView) findViewById(R.id.image);
         trainingNameEditText = (EditText) findViewById(R.id.trainingNameEditText);
         trainingDescriptionEditText = (EditText) findViewById(R.id.trainingDescriptionEditText);
-     
+
 
         initToolbar();
 
@@ -108,17 +106,19 @@ public class addNewTrainingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionSave) {
-            if(photo!=null) {
+            datasource.addTraining(trainingNameEditText.getText().toString(), "Longitude: -122.0840 Latitude: 37.4220");
+            newTraining = new Training(trainingNameEditText.getText().toString(),"Longitude: -122.0840 Latitude: 37.4220");
+                if(photo!=null){
                 String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
-                datasource.addTraining(trainingNameEditText.getText().toString(), "Longitude: -122.0840 Latitude: 37.4220");
-                trainingList.add(new Training(trainingNameEditText.getText().toString(),"Longitude: -122.0840 Latitude: 37.4220"));
-                if(imagePath!=null && imagePath.length()>=0){
-                    datasource.addTrainingExtra(trainingNameEditText.getText().toString(),TrainingExtra.ExtraType.Image,imagePath);
+                    if(imagePath!=null && imagePath.length()>=0) {
+                    datasource.addTrainingExtra(trainingNameEditText.getText().toString(), TrainingExtra.ExtraType.Image, imagePath);
+                    }
                 }
                 if(trainingDescriptionEditText.getText()!=null && trainingDescriptionEditText.getText().length()>=0){
                     datasource.addTrainingExtra(trainingNameEditText.getText().toString(),TrainingExtra.ExtraType.Description,trainingDescriptionEditText.getText().toString());
+                    descriptionExtra = new TrainingExtra(newTraining.getName(),TrainingExtra.ExtraType.Description,trainingNameEditText.getText().toString());
                 }
-            }
+
             result = RESULT_OK;
             finish();
 
@@ -129,6 +129,9 @@ public class addNewTrainingActivity extends AppCompatActivity {
     @Override
     public void finish() {
         Intent intent = new Intent();
+        System.out.println(newTraining);
+        intent.putExtra("newTraining", newTraining);
+        intent.putExtra("newDescriptionExtra", descriptionExtra);
         setResult(result, intent);
         super.finish();
     }
