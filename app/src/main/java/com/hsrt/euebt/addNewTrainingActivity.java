@@ -131,7 +131,6 @@ public class addNewTrainingActivity extends AppCompatActivity {
         Intent intent = new Intent();
         System.out.println(newTraining);
         intent.putExtra("newTraining", newTraining);
-        intent.putExtra("newDescriptionExtra", descriptionExtra);
         setResult(result, intent);
         super.finish();
     }

@@ -66,7 +66,7 @@ public class TrainingListActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview_product);
 
-        wdAdapter = new TrainingAdapter(this, trainingList, trainingDescriptionExtra, new OnObjectClickListener() {
+        wdAdapter = new TrainingAdapter(this, trainingList, new OnObjectClickListener() {
             @Override
             public void onObjectClick(Training training) {
                // DO stuff here when u click item in the list
@@ -144,7 +144,6 @@ public class TrainingListActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             // hier alle Daten auslesen und die Liste überschreiben datasource.getAllNames();
             Training addNewTraining = (Training) data.getSerializableExtra("newTraining");
-            trainingDescriptionExtra = (TrainingExtra) data.getSerializableExtra("newTrainingExtra");
             trainingList.add(addNewTraining);
             wdAdapter.notifyDataSetChanged();
             System.out.println("GEHT REIN"+trainingList+"");
