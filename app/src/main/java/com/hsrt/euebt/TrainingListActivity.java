@@ -110,6 +110,10 @@ public class TrainingListActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog,int id) {
                                 // if this button is clicked, just close
                                 // the dialog box and do nothing
+                                Training trainedTraining = datasource.addTraining(training.getName(),"Longitude: -122.0840 Latitude: 37.4220");
+                                trainingList.remove(training);
+                                trainingList.add(trainedTraining);
+                                wdAdapter.notifyDataSetChanged();
                                 dialog.cancel();
                             }
                         });

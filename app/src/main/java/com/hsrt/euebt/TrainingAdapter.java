@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.util.List;
+import java.util.Date;
 
 
 public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHolder> {
@@ -40,7 +42,7 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
         Training training = trainings.get(position);
 
         viewHolder.trainingNameTextView.setText(training.getName());
-        viewHolder.timeStamp.setText(training.getTimestamp()+"");
+        viewHolder.timeStamp.setText((DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date(training.getTimestamp())))+"");
 
         viewHolder.bind(training, listener);
     }
