@@ -41,8 +41,13 @@ public class TrainingListActivity extends AppCompatActivity {
         //lvProduct = (ListView)findViewById(R.id.listview_product);
         datasource = new TrainingsDataSource(this);
         datasource.open();
+        //Trainings aus DB saugen und in die Liste einfügen
         List<String> values = datasource.getAllNames();
         setupRecyclerView();
+        for(String trainingFromDB:values){
+            Training newTrainingFromDB = new Training(trainingFromDB);
+            trainingList.add(newTrainingFromDB);
+        }
     }
 
     //die Toolbar wird initialisiert
@@ -88,7 +93,16 @@ public class TrainingListActivity extends AppCompatActivity {
                                 Training trainingToShow = trainings.get(trainings.size()-1);
                                 //Training wird dem Intent mit gegeben
                                 showTrainingIntent.putExtra("showTraining",trainingToShow);
-                                //showTrainingIntent.putExtra("showTrainingDescription",trainingExtraToShow)
+                                //durch die zugehörigen Extras des Trainings gehen schauen ob description oder Image und das dem Inten zufügen
+                                for (TrainingExtra trainingExtraToShow :trainingExtras) {
+                                    if(trainingExtraToShow.getType().equals(TrainingExtra.ExtraType.Description)){
+                                        showTrainingIntent.putExtra("showTrainingDescription",trainingExtraToShow);
+                                        System.out.println("Description added to Intent");
+                                    }
+                                    if(trainingExtraToShow.getType().equals(TrainingExtra.ExtraType.Image))
+                                        showTrainingIntent.putExtra("imageToShow",trainingExtraToShow);
+                                        System.out.println("Image added to Intent");
+                                }
                                 startActivityForResult(showTrainingIntent, REQUEST_CODE);
                             }
                         })

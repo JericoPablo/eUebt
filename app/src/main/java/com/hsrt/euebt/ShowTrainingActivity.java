@@ -34,26 +34,33 @@ public class ShowTrainingActivity extends AppCompatActivity {
     private TrainingExtra showTrainingExtraImage;
     private TrainingExtra descriptionExtra;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_training);
         trainingNameTextView = (TextView) findViewById(R.id.trainingNameTextView);
         trainingDescriptionTextView = (TextView) findViewById(R.id.trainingDescriptionTextView);
-        //hole Training Objekt aus dem Intent und das TrainingExtra
+        imageShow =  (ImageView) findViewById(R.id.image_show);
+        //hole Training Objekt aus dem Intent und die TrainingExtras
         showTraining = (Training) getIntent().getSerializableExtra("showTraining");
         showTrainingExtraDescription = (TrainingExtra) getIntent().getSerializableExtra("showTrainingDescription");
-        // showTrainingExtraImage = (TrainingExtra) getIntent().getSerializableExtra("showTrainingImage");
-        //photo = (Bitmap) getIntent().getExtras().get("trainingImage");
-        //imageShow.setImageBitmap(photo);
+        showTrainingExtraImage = (TrainingExtra) getIntent().getSerializableExtra("imageToShow");
 
+        // zeige Bild an wenn eins existiert
+        if(showTrainingExtraImage!=null) {
+            photo = ImageController.getInstance().loadImageFromStorage(showTrainingExtraImage.getContent());
+            if(photo!=null){
+                imageShow.setImageBitmap(photo);
+            }
+        }
         //Füge vom Training den Namen als Text ein
         trainingNameTextView.setText(showTraining.getName());
-        //Hier sollte die Description rein da nicht unterscheidet werden kann ob Description oder Image Pfad scheiterts
-        //trainingDescriptionTextView.setText(showTrainingExtraDescription.getContent());
-
+        //wenn description existiert zeige an
+        if(showTrainingExtraDescription!=null) {
+            trainingDescriptionTextView.setText(showTrainingExtraDescription.getContent());
+        }
         initToolbar();
-
         datasource = new TrainingsDataSource(this);
         datasource.open();
     }
@@ -69,14 +76,6 @@ public class ShowTrainingActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-
-
-    //Inten für die Camera wird ausgeführt
-    public void takePicture(View view) {
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
     //momentan nichts

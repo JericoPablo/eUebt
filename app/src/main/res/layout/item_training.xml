@@ -16,6 +16,14 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
 
+    <TextView
+        android:text="timeStamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timeStamp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
+
     <!--
     <TextView
         android:id="@+id/training_description"

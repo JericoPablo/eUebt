@@ -112,6 +112,7 @@ public class addNewTrainingActivity extends AppCompatActivity {
                 String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
                     if(imagePath!=null && imagePath.length()>=0) {
                     datasource.addTrainingExtra(trainingNameEditText.getText().toString(), TrainingExtra.ExtraType.Image, imagePath);
+                    System.out.print(imagePath);
                     }
                 }
                 if(trainingDescriptionEditText.getText()!=null && trainingDescriptionEditText.getText().length()>=0){
