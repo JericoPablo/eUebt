@@ -24,6 +24,7 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
         this.listener = listener;
     }
 
+    //bla
     @Override
     public TrainingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -36,12 +37,12 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final TrainingAdapter.ViewHolder viewHolder, int position) {
-        Training workoutExercise = trainings.get(position);
+        Training training = trainings.get(position);
 
-        viewHolder.trainingNameTextView.setText(workoutExercise.getName());
-        //viewHolder.trainingDescriptionTextView.setText(trainingDescriptionExtra.getContent());
+        viewHolder.trainingNameTextView.setText(training.getName());
+        viewHolder.timeStamp.setText(training.getTimestamp()+"");
 
-        viewHolder.bind(workoutExercise, listener);
+        viewHolder.bind(training, listener);
     }
 
     @Override
@@ -52,11 +53,12 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView trainingNameTextView;
-        public TextView trainingDescriptionTextView;
+        public TextView timeStamp;
 
         public ViewHolder(View itemView) {
             super(itemView);
             trainingNameTextView = (TextView) itemView.findViewById(R.id.training_name);
+            timeStamp = (TextView) itemView.findViewById(R.id.timeStamp);
 
         }
 
