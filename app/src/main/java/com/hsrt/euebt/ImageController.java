@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.Random;
 
 /**
- * Created by Johann Andrejtschik on 07.06.2016.
+ * Created by Tugrul Duyar on 07.06.2016.
  */
 public class ImageController {
 

@@ -4,8 +4,11 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,18 +39,9 @@ public class TrainingListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_uebungen);
         initToolbar();
         //lvProduct = (ListView)findViewById(R.id.listview_product);
-
-
         datasource = new TrainingsDataSource(this);
         datasource.open();
-
         List<String> values = datasource.getAllNames();
-
-        // use the SimpleCursorAdapter to show the
-        // elements in a ListView
-       // ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
-        //setListAdapter(adapter);
-
         setupRecyclerView();
     }
 
@@ -68,9 +62,50 @@ public class TrainingListActivity extends AppCompatActivity {
 
         wdAdapter = new TrainingAdapter(this, trainingList, new OnObjectClickListener() {
             @Override
-            public void onObjectClick(Training training) {
-               // DO stuff here when u click item in the list
+            public void onObjectClick(final Training training) {
+               // Item in der Liste wurde angeklickt, alert wird aufgerufen
                 System.out.println("Item Clicked");
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TrainingListActivity.this);
+
+                // set title
+                alertDialogBuilder.setTitle("Schon gEÜBT?");
+
+                // set dialog message
+                //Anzeigen-> Zeigt Training an
+                // Aktualisieren -> >Training wird als erneut geübt aktualisiert
+                alertDialogBuilder
+                        .setMessage("Anzeigen oder Aktualisieren?")
+                        .setCancelable(false)
+                        .setPositiveButton("Anzeigen",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                //Intent um das AnzeigeActivity zu öffnen
+                                Intent showTrainingIntent = new Intent(getBaseContext(),ShowTrainingActivity.class);
+                                //Aus Datenbank das Training auslesen mit den Extras
+                                List<Training> trainings  = datasource.getAllTrainingsWithName(training.getName());
+                                List<TrainingExtra> trainingExtras = datasource.getAllExtraDataForTraining(training.getName());
+                                //das aktuellste Training aus der Liste nehmen (hoffentlich ist die letzte Training einheit in der Liste
+                                //die aktuellste)
+                                Training trainingToShow = trainings.get(trainings.size()-1);
+                                //Training wird dem Intent mit gegeben
+                                showTrainingIntent.putExtra("showTraining",trainingToShow);
+                                //showTrainingIntent.putExtra("showTrainingDescription",trainingExtraToShow)
+                                startActivityForResult(showTrainingIntent, REQUEST_CODE);
+                            }
+                        })
+                        .setNegativeButton("Aktualisieren",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // if this button is clicked, just close
+                                // the dialog box and do nothing
+                                dialog.cancel();
+                            }
+                        });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+
             }
         });
 
@@ -107,14 +142,6 @@ public class TrainingListActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 */
-    /*
-    public void addItems(View v) {
-        //Init adapter
-        lvProduct.setAdapter(adapter);
-        //EditText nameUebungET= (EditText)findViewById(R.id.nameEditText);
-        mUebungList.add(new Training(nameUebungET.getText()+""));
-        clearTextField(nameUebungET);
-    }*/
 
     public void clearTextField(EditText toClear){
         toClear.setText("");

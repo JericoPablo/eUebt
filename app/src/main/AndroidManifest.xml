@@ -17,6 +17,7 @@
         </activity>
 
         <activity android:name=".addNewTrainingActivity"/>
+        <activity android:name=".ShowTrainingActivity"/>
     </application>
 
 </manifest>
