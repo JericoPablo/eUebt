@@ -36,19 +36,40 @@ public class TrainingsDataSource {
     }
 
     /**
-     * Adds a new training unit (just done by the user) to the database.
+     * Writes any training unit to the database.
+     * @param training The training unit you want to write to the database.
+     */
+    public void addTraining(Training training) {
+        ContentValues values = new ContentValues();
+        values.put(MySQLiteHelper.COLUMN_NAME, training.getName());
+        values.put(MySQLiteHelper.COLUMN_TIMESTAMP, training.getTimestamp());
+        values.put(MySQLiteHelper.COLUMN_LOCATION, training.getLocation());
+        database.insert(MySQLiteHelper.TABLE_TRAININGS, null, values);
+    }
+
+    /**
+     * Adds a new training unit that was just done by the user to the database.
+     * For this, a new training unit with the current timestamp will be created.
      * @param name The name of the training unit that shall be stored in the database.
      * @param location The location where the training unit was done.
      * @return The resulting training unit that was generated and stored in the database.
      */
     public Training addTraining(String name, String location) {
         Training result = new Training(name, location);
-        ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_NAME, result.getName());
-        values.put(MySQLiteHelper.COLUMN_TIMESTAMP, result.getTimestamp());
-        values.put(MySQLiteHelper.COLUMN_LOCATION, result.getLocation());
-        database.insert(MySQLiteHelper.TABLE_TRAININGS, null, values);
+        this.addTraining(result);
         return result;
+    }
+
+    /**
+     * Writes any training extra to the database.
+     * @param extra The training extra you want to write to the database.
+     */
+    public void addTrainingExtra(TrainingExtra extra) {
+        ContentValues values = new ContentValues();
+        values.put(MySQLiteHelper.COLUMN_EXTRA_NAME, extra.getTrainingName());
+        values.put(MySQLiteHelper.COLUMN_EXTRA_TYPE, extra.getType().toString());
+        values.put(MySQLiteHelper.COLUMN_EXTRA_CONTENT, extra.getContent());
+        database.insert(MySQLiteHelper.TABLE_TRAINING_EXTRAS, null, values);
     }
 
     /**
@@ -60,11 +81,7 @@ public class TrainingsDataSource {
      */
     public TrainingExtra addTrainingExtra(String trainingName, TrainingExtra.ExtraType type, String content) {
         TrainingExtra result = new TrainingExtra(trainingName, type, content);
-        ContentValues values = new ContentValues();
-        values.put(MySQLiteHelper.COLUMN_EXTRA_NAME, result.getTrainingName());
-        values.put(MySQLiteHelper.COLUMN_EXTRA_TYPE, result.getType().toString());
-        values.put(MySQLiteHelper.COLUMN_EXTRA_CONTENT, result.getContent());
-        database.insert(MySQLiteHelper.TABLE_TRAINING_EXTRAS, null, values);
+        this.addTrainingExtra(result);
         return result;
     }
 
@@ -95,12 +112,13 @@ public class TrainingsDataSource {
 
     /**
      * Retrieves a list of all training units belonging to a specific training unit pool.
+     * The training units will be ordered descending by timestamp! Therefore, the most recent unit is the first item.
      * @param name The name of the training units that should be retrieved.
      * @return All training units from the database that have the given name.
      */
     public List<Training> getAllTrainingsWithName(String name) {
         List<Training> trainings = new ArrayList<>();
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAININGS, trainingColumns, MySQLiteHelper.COLUMN_NAME + " = '" + name + "'", null, null, null, null);
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_TRAININGS, trainingColumns, MySQLiteHelper.COLUMN_NAME + " = '" + name + "'", null, null, null, MySQLiteHelper.COLUMN_TIMESTAMP + " DESC");
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Training training = cursorToTraining(cursor);
