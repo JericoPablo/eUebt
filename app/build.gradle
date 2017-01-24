@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.hsrt.euebt"
-        minSdkVersion 19
+        minSdkVersion 24
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"

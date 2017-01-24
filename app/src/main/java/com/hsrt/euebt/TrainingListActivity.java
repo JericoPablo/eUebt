@@ -59,26 +59,18 @@ public class TrainingListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_uebungen);
         initToolbar();
         //lvProduct = (ListView)findViewById(R.id.listview_product);
+
+        //Trainings aus DB saugen und in die Liste einfügen
         datasource = new TrainingsDataSource(this);
         datasource.open();
-        //Trainings aus DB saugen und in die Liste einfügen
         List<String> values = datasource.getAllNames();
         for(String trainingName: values){
             List<Training> trainingListWithNames = datasource.getAllTrainingsWithName(trainingName);
             trainingList.add(trainingListWithNames.get(0));
         }
-        /* [Johannes] Bisher wird die Liste noch nicht sortiert, das sollte hier passieren:
-         *
-         * //noinspection Since15
-         * trainingList.sort(new Comparator<Training>() {
-         *     @Override
-         *     public int compare(Training o1, Training o2) {
-         *         // Sort the list according to the timestamps...
-         *         return o1.getTimestamp() > o2.getTimestamp() ? 1 : -1;
-         *     }
-         * });
-         *
-         * Zusätzlich wird, weil unser Projekt scheinbar eine relativ alte Java-API benutzt,
+        sortListData();
+
+         /* Zusätzlich wird, weil unser Projekt scheinbar eine relativ alte Java-API benutzt,
          * folgende Annotation vor dieser Funktion (onCreate) benötigt, um keine Warnung zu bekommen!
          * @RequiresApi(api = Build.VERSION_CODES.N)
          */
@@ -108,6 +100,22 @@ public class TrainingListActivity extends AppCompatActivity {
         });
     }
 
+
+    private void sortListData(){
+
+
+        /* [Johannes] Bisher wird die Liste noch nicht sortiert, das sollte hier passieren:
+         */
+        //noinspection Since15
+        trainingList.sort(new Comparator<Training>() {
+            @Override
+            public int compare(Training o1, Training o2) {
+                // Sort the list according to the timestamps...
+                return o1.getTimestamp() > o2.getTimestamp() ? 1 : -1;
+            }
+        });
+
+    }
 
     private void checkForLocationPermission (){
 
@@ -281,6 +289,7 @@ public class TrainingListActivity extends AppCompatActivity {
             Training addNewTraining = (Training) data.getSerializableExtra("newTraining");
             trainingList.add(addNewTraining);
             wdAdapter.notifyDataSetChanged();
+            sortListData();
         }
     }
 
