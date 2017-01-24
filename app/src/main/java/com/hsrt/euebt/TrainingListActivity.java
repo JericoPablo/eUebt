@@ -60,11 +60,16 @@ public class TrainingListActivity extends AppCompatActivity {
         datasource.open();
         //Trainings aus DB saugen und in die Liste einfügen
         List<String> values = datasource.getAllNames();
+        for(String trainingName: values){
+            List<Training> trainingListWithNames = datasource.getAllTrainingsWithName(trainingName);
+            trainingList.add(trainingListWithNames.get(0));
+        }
+
         setupRecyclerView();
-        for(String trainingFromDB:values){
+        /*for(String trainingFromDB:values){
             Training newTrainingFromDB = new Training(trainingFromDB);
             trainingList.add(newTrainingFromDB);
-        }
+        }*/
 
         locLis = new locListener();
         locMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -211,14 +216,11 @@ public class TrainingListActivity extends AppCompatActivity {
 
         // Permissions überprüfen
         checkForLocationPermission();
-
         Location tmpLoc =locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-
-
         Intent addTrainingIntent = new Intent(this, addNewTrainingActivity.class);
         try {
-            adresses = geoCoder.getFromLocation(tmpLoc.getLatitude(),tmpLoc.getLatitude(),1);
+            adresses = geoCoder.getFromLocation(tmpLoc.getLatitude(),tmpLoc.getLongitude(),1);
+            System.out.println("adresses     "+adresses);
         } catch (IOException e) {
             System.out.println("=============================================================================== KEINE ADRESSEN==================================");
             e.printStackTrace();
@@ -232,8 +234,9 @@ public class TrainingListActivity extends AppCompatActivity {
         System.out.println("adresses.get(0).getCountryName() ->" + adresses.get(0).getCountryName());
         System.out.println("adresses.get(0).getCountryName() ->" + adresses.get(0).getPostalCode());
         System.out.println("#### GEODATEN - Umwandlung######");
-        //
-        addTrainingIntent.putExtra("Location",String.valueOf(tmpLoc.getLatitude()) + " # " +String.valueOf(tmpLoc.getLongitude()) );
+
+        //addTrainingIntent.putExtra("Location",String.valueOf(tmpLoc.getLatitude()) + " # " +String.valueOf(tmpLoc.getLongitude()) );
+        addTrainingIntent.putExtra("Location","" + adresses.get(0).getAddressLine(0));
 
         adresses.clear();
         startActivityForResult(addTrainingIntent, REQUEST_CODE);
@@ -255,13 +258,10 @@ public class TrainingListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            // hier alle Daten auslesen und die Liste überschreiben datasource.getAllNames();
+            // kehrt von der Hinzufügen Activity zurück und fügt das Objekt in die Liste, Liste wird aktualisiert
             Training addNewTraining = (Training) data.getSerializableExtra("newTraining");
             trainingList.add(addNewTraining);
-            System.out.println("LOCATIONDATA: " + addNewTraining.getLocation());
             wdAdapter.notifyDataSetChanged();
-            System.out.println("GEHT REIN"+trainingList+"");
-
         }
     }
 

@@ -33,6 +33,7 @@ public class ShowTrainingActivity extends AppCompatActivity {
     private TrainingExtra showTrainingExtraDescription;
     private TrainingExtra showTrainingExtraImage;
     private TrainingExtra descriptionExtra;
+    private TextView trainingGeoDataTextView;
 
 
     @Override
@@ -41,6 +42,7 @@ public class ShowTrainingActivity extends AppCompatActivity {
         setContentView(R.layout.show_training);
         trainingNameTextView = (TextView) findViewById(R.id.trainingNameTextView);
         trainingDescriptionTextView = (TextView) findViewById(R.id.trainingDescriptionTextView);
+        trainingGeoDataTextView = (TextView) findViewById(R.id.trainingGeoDataTextView);
         imageShow =  (ImageView) findViewById(R.id.image_show);
         //hole Training Objekt aus dem Intent und die TrainingExtras
         showTraining = (Training) getIntent().getSerializableExtra("showTraining");
@@ -55,11 +57,15 @@ public class ShowTrainingActivity extends AppCompatActivity {
             }
         }
         //Füge vom Training den Namen als Text ein
-        trainingNameTextView.setText(showTraining.getName());
+        trainingNameTextView.setText("Training Name: "+showTraining.getName());
         //wenn description existiert zeige an
         if(showTrainingExtraDescription!=null) {
-            trainingDescriptionTextView.setText(showTrainingExtraDescription.getContent());
+            trainingDescriptionTextView.setText("Description: "+showTrainingExtraDescription.getContent());
         }
+        if(trainingGeoDataTextView!=null) {
+            trainingGeoDataTextView.setText("Ort: "+showTraining.getLocation());
+        }
+
         initToolbar();
         datasource = new TrainingsDataSource(this);
         datasource.open();
@@ -91,28 +97,8 @@ public class ShowTrainingActivity extends AppCompatActivity {
         return true;
     }
 
-    //ist nur copyPaste aus anderen Klasse nicht beachten
-    //wenn oben rechts auf akzeptieren geklickt wird wird das Bild in die Storage gespeichert und der Pfad ausgelesen und in die DB geschrieben
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-       /* if (item.getItemId() == R.id.actionSave) {
-            datasource.addTraining(trainingNameEditText.getText().toString(), "Longitude: -122.0840 Latitude: 37.4220");
-            newTraining = new Training(trainingNameEditText.getText().toString(),"Longitude: -122.0840 Latitude: 37.4220");
-            if(photo!=null){
-                String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
-                if(imagePath!=null && imagePath.length()>=0) {
-                    datasource.addTrainingExtra(trainingNameEditText.getText().toString(), TrainingExtra.ExtraType.Image, imagePath);
-                }
-            }
-            if(trainingDescriptionEditText.getText()!=null && trainingDescriptionEditText.getText().length()>=0){
-                datasource.addTrainingExtra(trainingNameEditText.getText().toString(),TrainingExtra.ExtraType.Description,trainingDescriptionEditText.getText().toString());
-                descriptionExtra = new TrainingExtra(newTraining.getName(),TrainingExtra.ExtraType.Description,trainingNameEditText.getText().toString());
-            }
-
-            result = RESULT_OK;
-            finish();
-
-        }*/
         return true;
     }
 

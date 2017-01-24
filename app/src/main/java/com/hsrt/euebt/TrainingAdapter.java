@@ -26,7 +26,6 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
         this.listener = listener;
     }
 
-    //bla
     @Override
     public TrainingAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -40,10 +39,12 @@ public class TrainingAdapter extends RecyclerView.Adapter<TrainingAdapter.ViewHo
     @Override
     public void onBindViewHolder(final TrainingAdapter.ViewHolder viewHolder, int position) {
         Training training = trainings.get(position);
-
+        //Training Name wird ausgelesen und gesetzt
         viewHolder.trainingNameTextView.setText(training.getName());
-        viewHolder.timeStamp.setText((DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date(training.getTimestamp())))+"");
-
+        //Training TimeStamp wird ausgelesen und gesetzt
+        viewHolder.timeStamp.setText((DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date(training.getTimestamp()*1000)))+"");
+        System.out.println("===================TRAININGADAPTER: "+(DateFormat.getTimeInstance(DateFormat.MEDIUM).format(new Date(training.getTimestamp()*1000)))+"");
+        System.out.println("===================Training.getTimestamp(): "+training.getTimestamp());
         viewHolder.bind(training, listener);
     }
 

@@ -14,7 +14,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,14 +67,6 @@ public class addNewTrainingActivity extends AppCompatActivity {
     }
 
     public void addItems(View v) {
-
-        /*trainingList.add(new Training(trainingNameEditText.getText()+"",trainingDescriptionEditText.getText()+""));
-        clearTextField(trainingNameEditText);
-        clearTextField(trainingDescriptionEditText);
-        Intent nextIntent = new Intent(this, TrainingListActivity.class);
-        nextIntent.putExtra("trainingList", trainingList);
-        this.startActivity(nextIntent);
-        */
     }
     public void clearTextField(EditText toClear){
         toClear.setText("");
@@ -106,17 +100,15 @@ public class addNewTrainingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionSave) {
-
             newTraining =  datasource.addTraining(trainingNameEditText.getText().toString(), getIntent().getStringExtra("Location"));
                 if(photo!=null){
-                String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
-                    if(imagePath!=null && imagePath.length()>=0) {
-                    datasource.addTrainingExtra(trainingNameEditText.getText().toString(), TrainingExtra.ExtraType.Image, imagePath);
-                    System.out.print(imagePath);
-                    }
+                    String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
+                        if(imagePath!=null && imagePath.length()>=0) {
+                            datasource.addTrainingExtra(trainingNameEditText.getText().toString(), TrainingExtra.ExtraType.Image, imagePath);
+                            System.out.print(imagePath);
+                        }
                 }
                 if(trainingDescriptionEditText.getText()!=null && trainingDescriptionEditText.getText().length()>=0){
-
                     descriptionExtra = datasource.addTrainingExtra(trainingNameEditText.getText().toString(),TrainingExtra.ExtraType.Description,trainingDescriptionEditText.getText().toString());
                 }
 
