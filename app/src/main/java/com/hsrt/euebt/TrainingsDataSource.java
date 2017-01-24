@@ -12,6 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 
 /**
  * This class offers an interface for the app's database.
@@ -20,7 +21,7 @@ public class TrainingsDataSource {
 
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
-    private String[] trainingColumns = { MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_TIMESTAMP, MySQLiteHelper.COLUMN_LOCATION };
+    private String[] trainingColumns = { MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_TIMESTAMP, MySQLiteHelper.COLUMN_LOCATION, MySQLiteHelper.COLUMN_ADDRESS };
     private String[] extraDataColumns = { MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_EXTRA_TYPE, MySQLiteHelper.COLUMN_EXTRA_CONTENT};
 
     public TrainingsDataSource(Context context) {
@@ -43,7 +44,8 @@ public class TrainingsDataSource {
         ContentValues values = new ContentValues();
         values.put(MySQLiteHelper.COLUMN_NAME, training.getName());
         values.put(MySQLiteHelper.COLUMN_TIMESTAMP, training.getTimestamp());
-        values.put(MySQLiteHelper.COLUMN_LOCATION, training.getLocation());
+        values.put(MySQLiteHelper.COLUMN_LOCATION, training.getLocation().getLocation().getLongitude() + ":" + training.getLocation().getLocation().getLatitude());
+        values.put(MySQLiteHelper.COLUMN_ADDRESS, training.getLocation().getAddress());
         database.insert(MySQLiteHelper.TABLE_TRAININGS, null, values);
     }
 
@@ -54,7 +56,7 @@ public class TrainingsDataSource {
      * @param location The location where the training unit was done.
      * @return The resulting training unit that was generated and stored in the database.
      */
-    public Training addTraining(String name, String location) {
+    public Training addTraining(String name, TrainingPlace location) {
         Training result = new Training(name, location);
         this.addTraining(result);
         return result;
@@ -151,7 +153,11 @@ public class TrainingsDataSource {
         if (cursor == null) {
             return null;
         }
-        return new Training(cursor.getString(0), cursor.getLong(1), cursor.getString(2));
+        String[] coordinates = cursor.getString(2).split(":");
+        Location location = new Location("");
+        location.setLongitude(Double.parseDouble(coordinates[0]));
+        location.setLatitude(Double.parseDouble(coordinates[1]));
+        return new Training(cursor.getString(0), cursor.getLong(1), new TrainingPlace(cursor.getString(3), location));
     }
 
     private TrainingExtra cursorToTrainingExtra(Cursor cursor) {

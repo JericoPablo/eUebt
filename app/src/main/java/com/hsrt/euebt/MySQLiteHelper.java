@@ -17,6 +17,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String TABLE_TRAININGS = "trainings";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_TIMESTAMP = "timestamp";
+    public static final String COLUMN_ADDRESS = "address";
     public static final String COLUMN_LOCATION = "location";
     public static final String TABLE_TRAINING_EXTRAS = "extras";
     public static final String COLUMN_EXTRA_NAME = "name";
@@ -24,8 +25,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String COLUMN_EXTRA_CONTENT = "content";
 
     private static final String DATABASE_NAME = "euebt.db";
-    private static final int DATABASE_VERSION = 2;
-    private static final String TRAININGS_TABLE_CREATE = "create table " + TABLE_TRAININGS + "( " + COLUMN_NAME + " text not null, " + COLUMN_TIMESTAMP + " integer not null, " + COLUMN_LOCATION + " text not null );";
+    private static final int DATABASE_VERSION = 3;
+    private static final String TRAININGS_TABLE_CREATE = "create table " + TABLE_TRAININGS + "( " + COLUMN_NAME + " text not null, " + COLUMN_TIMESTAMP + " integer not null, " + COLUMN_LOCATION + " text not null, " + COLUMN_ADDRESS + " text not null );";
     private static final String EXTRAS_TABLE_CREATE = "create table " + TABLE_TRAINING_EXTRAS + "( " + COLUMN_EXTRA_NAME + " text not null, " + COLUMN_EXTRA_TYPE + " text not null, " + COLUMN_EXTRA_CONTENT + " text not null );";
 
     public MySQLiteHelper(Context context) {

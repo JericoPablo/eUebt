@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class Training implements Serializable {
 
     private String name;
-    private String location;
+    private TrainingPlace location;
     private long timestamp;
 
     /**
@@ -22,7 +22,6 @@ public class Training implements Serializable {
     public Training(String name) {
         this.name  = name;
         this.timestamp = System.currentTimeMillis() / 1000;
-        this.location = "";
     }
 
     /**
@@ -30,7 +29,7 @@ public class Training implements Serializable {
      * @param name The name of the training unit that shall be instantiated.
      * @param location The location where this specific training was done as a string.
      */
-    public Training(String name, String location) {
+    public Training(String name, TrainingPlace location) {
         this.name  = name;
         this.timestamp = System.currentTimeMillis() / 1000;
         this.location = location;
@@ -42,7 +41,7 @@ public class Training implements Serializable {
      * @param timestamp A specific timestamp that will be assigned to the training unit.
      * @param location The location where this specific training was done as a string.
      */
-    public Training(String name, long timestamp, String location) {
+    public Training(String name, long timestamp, TrainingPlace location) {
         this.name = name;
         this.timestamp = timestamp;
         this.location = location;
@@ -52,7 +51,7 @@ public class Training implements Serializable {
         return timestamp;
     }
 
-    public String getLocation() {
+    public TrainingPlace getLocation() {
         return location;
     }
 
