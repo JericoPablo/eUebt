@@ -4,10 +4,18 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.audiofx.BassBoost;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +40,10 @@ public class TrainingListActivity extends AppCompatActivity {
     private EditText trainingDescriptionEditText;
     private RecyclerView recyclerView;
 
+    private LocationManager locMan;
+    private locListener locLis;
+    private Geocoder geoCod;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +60,11 @@ public class TrainingListActivity extends AppCompatActivity {
             Training newTrainingFromDB = new Training(trainingFromDB);
             trainingList.add(newTrainingFromDB);
         }
+
+        locLis = new locListener();
+        locMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        checkForLocationPermission();
+
     }
 
     //die Toolbar wird initialisiert
@@ -60,6 +77,24 @@ public class TrainingListActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+
+    private void checkForLocationPermission (){
+
+        // Permission überprüfen
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locLis);
+        }
+        else
+        {
+            System.out.println("KEINE BERECHTIGUNG");
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_CODE);
+        }
     }
 
     private void setupRecyclerView() {
@@ -167,7 +202,13 @@ public class TrainingListActivity extends AppCompatActivity {
 
     //Wenn ein neues Training hinzugefügt werden soll, wird eine neue Activity aufgerufen mittels einem Intent
     public void addTraining(View view) {
+
+        // Permissions überprüfen
+        checkForLocationPermission();
+
+        Location tmpLoc =locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         Intent addTrainingIntent = new Intent(this, addNewTrainingActivity.class);
+        addTrainingIntent.putExtra("Location",String.valueOf(tmpLoc.getLatitude()) + " # " +String.valueOf(tmpLoc.getLongitude()) );
         startActivityForResult(addTrainingIntent, REQUEST_CODE);
     }
 
@@ -190,6 +231,7 @@ public class TrainingListActivity extends AppCompatActivity {
             // hier alle Daten auslesen und die Liste überschreiben datasource.getAllNames();
             Training addNewTraining = (Training) data.getSerializableExtra("newTraining");
             trainingList.add(addNewTraining);
+            System.out.println("LOCATIONDATA: " + addNewTraining.getLocation());
             wdAdapter.notifyDataSetChanged();
             System.out.println("GEHT REIN"+trainingList+"");
 

@@ -106,8 +106,8 @@ public class addNewTrainingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.actionSave) {
-            datasource.addTraining(trainingNameEditText.getText().toString(), "Longitude: -122.0840 Latitude: 37.4220");
-            newTraining = new Training(trainingNameEditText.getText().toString(),"Longitude: -122.0840 Latitude: 37.4220");
+
+            newTraining =  datasource.addTraining(trainingNameEditText.getText().toString(), getIntent().getStringExtra("Location"));
                 if(photo!=null){
                 String imagePath = ImageController.getInstance().saveImageToStorage(photo, this);
                     if(imagePath!=null && imagePath.length()>=0) {
@@ -116,8 +116,8 @@ public class addNewTrainingActivity extends AppCompatActivity {
                     }
                 }
                 if(trainingDescriptionEditText.getText()!=null && trainingDescriptionEditText.getText().length()>=0){
-                    datasource.addTrainingExtra(trainingNameEditText.getText().toString(),TrainingExtra.ExtraType.Description,trainingDescriptionEditText.getText().toString());
-                    descriptionExtra = new TrainingExtra(newTraining.getName(),TrainingExtra.ExtraType.Description,trainingNameEditText.getText().toString());
+
+                    descriptionExtra = datasource.addTrainingExtra(trainingNameEditText.getText().toString(),TrainingExtra.ExtraType.Description,trainingDescriptionEditText.getText().toString());
                 }
 
             result = RESULT_OK;
