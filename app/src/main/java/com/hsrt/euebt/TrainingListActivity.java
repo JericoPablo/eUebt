@@ -1,14 +1,17 @@
 package com.hsrt.euebt;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -42,7 +45,9 @@ public class TrainingListActivity extends AppCompatActivity {
 
     private LocationManager locMan;
     private locListener locLis;
-    private Geocoder geoCod;
+
+    private Geocoder geoCoder;
+    List<Address> adresses;
 
 
     @Override
@@ -63,6 +68,7 @@ public class TrainingListActivity extends AppCompatActivity {
 
         locLis = new locListener();
         locMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        geoCoder = new Geocoder(this, Locale.getDefault());
         checkForLocationPermission();
 
     }
@@ -207,8 +213,29 @@ public class TrainingListActivity extends AppCompatActivity {
         checkForLocationPermission();
 
         Location tmpLoc =locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+
+
         Intent addTrainingIntent = new Intent(this, addNewTrainingActivity.class);
+        try {
+            adresses = geoCoder.getFromLocation(tmpLoc.getLatitude(),tmpLoc.getLatitude(),1);
+        } catch (IOException e) {
+            System.out.println("=============================================================================== KEINE ADRESSEN==================================");
+            e.printStackTrace();
+        }
+
+        System.out.println("#### GEODATEN - Umwandlung######");
+        System.out.println("adresses.get(0).getAddressLine(0) ->" + adresses.get(0).getAddressLine(0));
+        System.out.println("adresses.get(0).getLocality() ->" + adresses.get(0).getLocality());
+        System.out.println("adresses.get(0).getAdminArea() ->" + adresses.get(0).getAdminArea());
+        System.out.println("adresses.get(0).getCountryCode() -> "+adresses.get(0).getCountryCode());
+        System.out.println("adresses.get(0).getCountryName() ->" + adresses.get(0).getCountryName());
+        System.out.println("adresses.get(0).getCountryName() ->" + adresses.get(0).getPostalCode());
+        System.out.println("#### GEODATEN - Umwandlung######");
+        //
         addTrainingIntent.putExtra("Location",String.valueOf(tmpLoc.getLatitude()) + " # " +String.valueOf(tmpLoc.getLongitude()) );
+
+        adresses.clear();
         startActivityForResult(addTrainingIntent, REQUEST_CODE);
     }
 
