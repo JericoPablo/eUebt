@@ -13,11 +13,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Tugrul on 20.01.2017.
  */
 
-public class ShowTrainingActivity extends AppCompatActivity {
+public class ShowTrainingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final int CAMERA_REQUEST = 1898;
 
@@ -34,6 +45,8 @@ public class ShowTrainingActivity extends AppCompatActivity {
     private TrainingExtra showTrainingExtraImage;
     private TrainingExtra descriptionExtra;
     private TextView trainingGeoDataTextView;
+    private double lati;
+    private double longi;
 
 
     @Override
@@ -48,7 +61,8 @@ public class ShowTrainingActivity extends AppCompatActivity {
         showTraining = (Training) getIntent().getSerializableExtra("showTraining");
         showTrainingExtraDescription = (TrainingExtra) getIntent().getSerializableExtra("showTrainingDescription");
         showTrainingExtraImage = (TrainingExtra) getIntent().getSerializableExtra("imageToShow");
-
+        lati = (double) getIntent().getDoubleExtra("Lati", 0);
+        longi = (double) getIntent().getDoubleExtra("Longi", 0);
         // zeige Bild an wenn eins existiert
         if(showTrainingExtraImage!=null) {
             photo = ImageController.getInstance().loadImageFromStorage(showTrainingExtraImage.getContent());
@@ -69,6 +83,10 @@ public class ShowTrainingActivity extends AppCompatActivity {
         initToolbar();
         datasource = new TrainingsDataSource(this);
         datasource.open();
+
+        //google maps
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     private void initToolbar() {
@@ -105,5 +123,20 @@ public class ShowTrainingActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lati,longi),15));
+        CameraPosition camPos = new CameraPosition.Builder()
+                .target(new LatLng(lati,longi))
+                .zoom(15)
+                .build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(camPos));
+
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(lati,longi)).title(showTraining.getName()+ " "+new SimpleDateFormat("d.M.y - h:m a").format(new Date(showTraining.getTimestamp() * 1000))));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(lati+10,longi)).title(showTraining.getName()+ " "+new SimpleDateFormat("d.M.y - h:m a").format(new Date(showTraining.getTimestamp() * 1000))));
+
     }
 }
