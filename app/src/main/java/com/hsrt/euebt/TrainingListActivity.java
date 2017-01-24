@@ -3,6 +3,7 @@ package com.hsrt.euebt;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -16,7 +17,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.audiofx.BassBoost;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -64,6 +67,21 @@ public class TrainingListActivity extends AppCompatActivity {
             List<Training> trainingListWithNames = datasource.getAllTrainingsWithName(trainingName);
             trainingList.add(trainingListWithNames.get(0));
         }
+        /* [Johannes] Bisher wird die Liste noch nicht sortiert, das sollte hier passieren:
+         *
+         * //noinspection Since15
+         * trainingList.sort(new Comparator<Training>() {
+         *     @Override
+         *     public int compare(Training o1, Training o2) {
+         *         // Sort the list according to the timestamps...
+         *         return o1.getTimestamp() > o2.getTimestamp() ? 1 : -1;
+         *     }
+         * });
+         *
+         * Zusätzlich wird, weil unser Projekt scheinbar eine relativ alte Java-API benutzt,
+         * folgende Annotation vor dieser Funktion (onCreate) benötigt, um keine Warnung zu bekommen!
+         * @RequiresApi(api = Build.VERSION_CODES.N)
+         */
 
         setupRecyclerView();
         /*for(String trainingFromDB:values){
@@ -157,6 +175,7 @@ public class TrainingListActivity extends AppCompatActivity {
                                 // if this button is clicked, just close
                                 // the dialog box and do nothing
                                 Training trainedTraining = datasource.addTraining(training.getName(),"Longitude: -122.0840 Latitude: 37.4220");
+                                System.out.println("Current number of units for \"" + training.getName() + "\": " + datasource.getAllTrainingsWithName(training.getName()).size());
                                 trainingList.remove(training);
                                 trainingList.add(trainedTraining);
                                 wdAdapter.notifyDataSetChanged();
