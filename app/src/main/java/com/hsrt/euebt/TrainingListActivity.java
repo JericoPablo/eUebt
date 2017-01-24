@@ -157,6 +157,7 @@ public class TrainingListActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog,int id) {
                                 //Intent um das AnzeigeActivity zu öffnen
                                 Intent showTrainingIntent = new Intent(getBaseContext(),ShowTrainingActivity.class);
+
                                 //Aus Datenbank das Training auslesen mit den Extras
                                 List<Training> trainings  = datasource.getAllTrainingsWithName(training.getName());
                                 List<TrainingExtra> trainingExtras = datasource.getAllExtraDataForTraining(training.getName());
@@ -165,6 +166,10 @@ public class TrainingListActivity extends AppCompatActivity {
                                 Training trainingToShow = trainings.get(trainings.size()-1);
                                 //Training wird dem Intent mit gegeben
                                 showTrainingIntent.putExtra("showTraining",trainingToShow);
+                                checkForLocationPermission();
+                                Location tmpLoc =locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                showTrainingIntent.putExtra("Lati", tmpLoc.getLatitude());
+                                showTrainingIntent.putExtra("Longi", tmpLoc.getLongitude());
                                 //durch die zugehörigen Extras des Trainings gehen schauen ob description oder Image und das dem Inten zufügen
                                 for (TrainingExtra trainingExtraToShow :trainingExtras) {
                                     if(trainingExtraToShow.getType().equals(TrainingExtra.ExtraType.Description)){
@@ -182,7 +187,7 @@ public class TrainingListActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog,int id) {
                                 // if this button is clicked, just close
                                 // the dialog box and do nothing
-                                Training trainedTraining = datasource.addTraining(training.getName(),"Longitude: -122.0840 Latitude: 37.4220");
+                                Training trainedTraining = datasource.addTraining(training.getName(), "" + adresses.get(0).getAddressLine(0));
                                 System.out.println("Current number of units for \"" + training.getName() + "\": " + datasource.getAllTrainingsWithName(training.getName()).size());
                                 trainingList.remove(training);
                                 trainingList.add(trainedTraining);
@@ -264,6 +269,8 @@ public class TrainingListActivity extends AppCompatActivity {
 
         //addTrainingIntent.putExtra("Location",String.valueOf(tmpLoc.getLatitude()) + " # " +String.valueOf(tmpLoc.getLongitude()) );
         addTrainingIntent.putExtra("Location","" + adresses.get(0).getAddressLine(0));
+        //addTrainingIntent.putExtra("Latitude", String.valueOf(tmpLoc.getLatitude()));
+        //addTrainingIntent.putExtra("Longitude", String.valueOf(tmpLoc.getLongitude()));
 
         adresses.clear();
         startActivityForResult(addTrainingIntent, REQUEST_CODE);
